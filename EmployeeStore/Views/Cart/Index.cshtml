@@ -1,0 +1,56 @@
+﻿@model CartIndexViewModel
+@{
+    ViewBag.Title = "Cart";
+}
+
+<div class="card m-1 border-0" style="min-height:100vh;">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">Count:</th>
+                <th class="text-center">Object:</th>
+                <th class="text-center">Unit price:</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var line in Model.Cart.Lines)
+            {
+                <tr>
+                    <td class="text-center"><h5>@line.Quantity</h5></td>
+                    <td class="text-center">@line.Product.Name</td>
+                    <td class="text-center">@line.Product.Price.ToString("c")</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <form class="mt-1" style="float:right" asp-action="RemoveFromCart" method="post">
+                            <input type="hidden" name="ProductID"
+                                   value="@line.Product.Id" />
+                            <input type="hidden" name="returnUrl"
+                                   value="@Model.ReturnUrl" />
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="card-footer mb-1">
+        <h4 colspan="3" class="text-right">Total sum:</h4>
+        <h4 class="text-right">@Model.Cart.ComputeTotalValue().ToString("c")</h4>
+    </div>
+
+    <div class="text-center p-1">
+        @if (Model.ReturnUrl != null)
+        {
+            <a class="btn btn-primary" href="@Model.ReturnUrl">Continue shopping</a>
+            <a class="btn btn-success" asp-action="Checkout" asp-controller="Order">Checkout</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" asp-action="Index" asp-controller="Home">Back</a>
+            <a class="btn btn-success" asp-action="Checkout" asp-controller="Order">Checkout</a>
+        }
+    </div>
+</div>

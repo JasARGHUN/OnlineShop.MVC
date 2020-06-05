@@ -1,0 +1,77 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<EmployeeStore.Models.Order>
+
+@{
+    ViewBag.Title = "Orders";
+    Layout = "_AdminLayout";
+}
+
+@if (Model.Count() > 0)
+{
+    <hr />
+
+    <table class="table table-bordered table-striped mt-1 p-2">
+        <thead>
+            <tr class="bg-warning">
+                <th>Заказчик:</th>
+                <th>Post Index:</th>
+                <th>Address:</th>
+                <th>Phone Number:</th>
+                <th colspan="1">Details:</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Order o in Model)
+            {
+                <tr>
+                    <td>@o.Name</td>
+                    <td>@o.Zip</td>
+                    <td>@o.Line1</td>
+                    <td>@o.Phone</td>
+                    <th>Object:</th>
+                    <th>Category:</th>
+                    <th>Count:</th>
+                    <th>Sum:</th>
+                    <th>Time:</th>
+                </tr>
+                @foreach (CartLine line in o.Lines)
+                {
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>@line.Product.Name</td>
+                        <td>@line.Product.Department</td>
+                        <td>@line.Quantity</td>
+                        <td>@line.TotalSum</td>
+                        <td>@line.OrderTime</td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="9" class="bg-transparent">
+                        <hr />
+                        <h5>Total Amount: @o.TotalAmount</h5>
+                        <hr />
+                        <form asp-action="MarkShipped" method="post" style="float:right">
+                            <input type="hidden" name="orderId" value="@o.OrderID" />
+                            <button type="submit" class="btn btn-lg btn-outline-danger">Confirm</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="text-center">
+        No shipped orders.
+    </div>
+}
+<div class="m-2">
+    @*Pagination*@
+    <nav style="float:left" aria-label="Products Paging">
+        <h5>@await this.Component.InvokeAsync("Pager", new { pagingList = this.Model })</h5>
+        <hr />
+    </nav>
+</div>
+<div class="text-center m-2">
+    <a asp-controller="Admin" asp-action="Index" class="btn btn-primary">Back to admin panel</a>
+</div>

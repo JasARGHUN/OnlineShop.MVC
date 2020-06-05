@@ -1,0 +1,71 @@
+﻿@model EmployeeCreateViewModel
+
+@{
+    ViewBag.Title = "Create Employee";
+    Layout = "_AdminLayout";
+}
+
+<div class="card text-center m-2 p-2">
+    <form asp-action="Create" asp-controller="Admin" enctype="multipart/form-data" method="post">
+        <div class="form-group">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" class="form-control" />
+            <div><span asp-validation-for="Name" class="text-danger"></span></div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Photo">Photo</label>
+            <div class="custom-file">
+                <input asp-for="Photo" class="form-control custom-file-input" />
+                <label class="custom-file-label">Choose File...</label>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email" class="form-control" />
+            <div><span asp-validation-for="Email" class="text-danger"></span></div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="7" cols="200"></textarea>
+            <div><span asp-validation-for="Description" class="text-danger"></span></div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Price">Price per hour</label>
+            <input asp-for="Price" class="form-control" />
+            <div><span asp-validation-for="Price" class="text-danger"></span></div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Department">Profile</label>
+            <input asp-for="Department" class="form-control" />
+            <div><span asp-validation-for="Department" class="text-danger"></span></div>
+        </div>
+        <hr />
+        <div class="text-center">
+            <input type="submit" value="Add" class="btn btn-outline-success" />
+            <a asp-action="Index" asp-controller="Admin" class="btn btn-outline-warning">Cancel</a>
+        </div>
+
+        @section Scripts{
+            <script>
+                $(document).ready(function () {
+                    $('.custom-file-input').on("change", function () {
+                        var fileLabel = $(this).next('.custom-file-label');
+                        var files = $(this)[0].files;
+                        if (files.length > 1) {
+                            fileLabel.html(files.length + ' files selected');
+                        }
+                        else if (files.length == 1) {
+                            fileLabel.html(files[0].name);
+                        }
+                    });
+                });
+            </script>
+        }
+
+    </form>
+</div>

@@ -1,0 +1,79 @@
+﻿@model EmployeeEditViewModel
+
+@{
+    ViewBag.Title = "Edit Employee";
+    Layout = "_AdminLayout";
+    var photoPath = "~/images/" + (Model.ExistingPhotoPath ?? "no-image-icon.png");
+}
+
+<div class="card text-center m-2 p-2">
+    <form asp-action="Edit" asp-controller="Admin" enctype="multipart/form-data" method="post">
+        <input hidden asp-for="Id" />
+        <input hidden asp-for="ExistingPhotoPath" />
+        <div class="form-group">
+            <label asp-for="Name">Name</label>
+            <input type="text" asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Photo">Photo</label>
+            <div class="custom-file">
+                <input asp-for="Photo" class="form-control custom-file-input" />
+                <label class="custom-file-label">Click here to change photo...</label>
+            </div>
+        </div>
+        <div class="form-group row col-sm-4 offset-4">
+            <img src="@photoPath" class="imgThumbnail" asp-append-version="true"/>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Email">Email</label>
+            <input type="text" asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="7" cols="200"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Price">Price per hour</label>
+            <input type="number" asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="Department">Profile</label>
+            <input type="text" asp-for="Department" class="form-control" />
+            <div><span asp-validation-for="Department" class="text-danger"></span></div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <input type="submit" value="Edit" class="btn btn-outline-success" />
+            <a asp-action="Index" asp-controller="Admin" class="btn btn-outline-warning">Cancel</a>
+        </div>
+
+        @section Scripts{
+            <script>
+                $(document).ready(function () {
+                    $('.custom-file-input').on("change", function () {
+                        var fileLabel = $(this).next('.custom-file-label');
+                        var files = $(this)[0].files;
+                        if (files.length > 1) {
+                            fileLabel.html(files.length + ' files selected');
+                        }
+                        else if (files.length == 1) {
+                            fileLabel.html(files[0].name);
+                        }
+                    });
+                });
+
+                
+            </script>
+        }
+
+    </form>
+</div>

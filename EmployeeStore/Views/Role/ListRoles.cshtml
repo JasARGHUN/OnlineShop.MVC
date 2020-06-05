@@ -1,0 +1,66 @@
+﻿@model IEnumerable<IdentityRole>
+@inject IAuthorizationService authorizationService
+
+@{
+    ViewBag.Title = "All Roles";
+    Layout = "_AdminLayout";
+}
+
+<h3>Role List</h3>
+<hr />
+
+@if (Model.Any())
+{
+<div class="table-responsive-md">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Role</th>
+                @if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+                {
+                    <th scope="col" class="text-right">Action</th>
+                }
+            </tr>
+        </thead>
+        @foreach (var obj in Model)
+        {
+            <tbody>
+                <tr>
+                    <td>@obj.Name</td>
+                    @if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+                    {
+                        <td class="text-right">
+                            <form asp-controller="Role" asp-action="DeleteRole" asp-route-id="@obj.Id" method="post">
+                                <a asp-controller="Role" asp-action="EditRole" asp-route-id="@obj.Id" class="btn btn-sm btn-warning">Add role to user</a>
+
+                                @if ((await authorizationService.AuthorizeAsync(User, "DeleteRolePolicy")).Succeeded)
+                                {
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Confirm Role delete: @obj.Name')">
+                                        Delete
+                                    </button>
+                                }
+                            </form>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        }
+    </table>
+</div>
+<div>
+    @if ((await authorizationService.AuthorizeAsync(User, "CreateRolePolicy")).Succeeded)
+    {
+        <a asp-action="CreateRole" asp-controller="Role" class="btn btn-outline-primary mb-2">Add Role</a>
+    }
+    <a asp-action="Index" asp-controller="Admin" class="btn btn-outline-primary mb-2">Back</a>
+</div>
+}
+else
+{
+    <h5>No Roles.</h5>
+    @if ((await authorizationService.AuthorizeAsync(User, "CreateRolePolicy")).Succeeded)
+    {
+        <a asp-action="CreateRole" asp-controller="Role" class="btn btn-outline-primary mb-2">Add Role</a>
+    }
+    <a asp-action="Index" asp-controller="Admin" class="btn btn-outline-primary mb-2">Back</a>
+}

@@ -1,0 +1,43 @@
+﻿@inject SignInManager<ApplicationUser> signInManager;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EmployeeStore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" asp-href-include="/lib/fontawesome/css/*.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="m-1 p-1">
+    <header>
+        <div class="bg-info p-2 row">
+            <div class="col">
+                <h4>@ViewBag.Title</h4>
+            </div>
+            <div class="col-2">
+                <a class="btn btn-sm btn-outline-warning" asp-action="Index" asp-controller="Home">Application</a>
+            </div>
+        </div>
+        @if (TempData["message"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["message"]
+            </div>
+        }
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

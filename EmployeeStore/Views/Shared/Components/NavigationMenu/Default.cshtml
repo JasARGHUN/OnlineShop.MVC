@@ -1,0 +1,21 @@
+﻿@model IEnumerable<string>
+
+<div class="dropdown">
+    <button class="btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false" asp-action="Index" asp-controller="Home"  asp-route-category="">
+        Category
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="btn btn btn-sm btn-block btn-secondary"
+           asp-action="Index"
+           asp-controller="Home"
+           asp-route-category="">All Category</a>
+        @foreach (string category in Model)
+        {
+            <a class="dropdown-item text-center btn btn-sm btn-block @(category == ViewBag.SelectedCategory ? "btn-primary": "btn-secondary")"
+               asp-action="Index" asp-controller="Home" asp-route-category="@category" asp-route-productPage="1">
+                @category
+            </a>
+        }
+    </div>
+</div>

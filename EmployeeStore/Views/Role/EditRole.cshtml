@@ -1,0 +1,63 @@
+﻿@model EditRoleViewModel
+@inject IAuthorizationService authorizationService
+
+@{
+    ViewBag.Title = "Edit Role";
+    Layout = "_AdminLayout";
+}
+
+<div class="card p-1">
+    <h1 class="text-center">Edit Role</h1>
+
+    <form method="post" class="mt-3">
+        <div class="form-group row">
+            <label asp-for="Id" class="col-sm-2 col-form-label">Id:</label>
+            <div class="col-sm-10">
+                <input asp-for="Id" disabled class="form-control">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="RoleName" class="col-sm-2 col-form-label">Role:</label>
+            <div class="col-sm-10">
+                <h5>@Model.RoleName</h5>
+                @*<input asp-for="RoleName" class="form-control">
+                    <span asp-validation-for="RoleName" class="text-danger"></span>*@
+            </div>
+        </div>
+
+        @*<div asp-validation-summary="All" class="text-danger"></div>
+            <hr />
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-success">Update</button>
+                    <a asp-action="ListRoles" class="btn btn-warning">Cancel</a>
+                </div>
+            </div>*@
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Users in this role</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Users.Any())
+                {
+                    foreach (var user in Model.Users)
+                    {
+                        <h5 class="card-title">@user</h5>
+                    }
+                }
+                else
+                {
+                    <h5 class="card-title">None at the moment</h5>
+                }
+            </div>
+            <div class="card-footer">
+                @if ((await authorizationService.AuthorizeAsync(User, "DeleteRolePolicy")).Succeeded)
+                {
+                    <a asp-controller="Role" asp-action="EditUsersInRole" asp-route-roleId="@Model.Id" class="btn btn-success" style="width:auto">Add or Remove Users</a>
+                }
+                <a asp-controller="Role" asp-action="ListRoles" class="btn btn-warning">Back</a>
+            </div>
+        </div>
+    </form>
+</div>

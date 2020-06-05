@@ -1,0 +1,31 @@
+﻿@model Employee
+
+@{
+    var photoPath = "~/images/" + (Model.PhotoPath ?? "no-image-icon.png");
+}
+
+    <form id="@Model.Id" asp-action="AddToCart"
+          asp-controller="Cart" method="post" class="p-1 m-2">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="card p-2 text-center boxShadows border-secondary justify-content-center" style="min-width: 31.5rem; max-width:30.5%">
+            <div class="m-1">
+                <h4 class="border-bottom-0">@Model.Name</h4>
+                <hr />
+            </div>
+
+            <img class="card-img-top imageSize border" src="@photoPath" alt="" asp-append-version="true" />
+            <hr />
+            <h2 class=" mt-2">
+                <span class="badge badge-pill badge-warning mt-1" style="float:right">
+                    Price: @Model.Price
+                </span>
+            </h2>
+            <a asp-controller="home" asp-action="details" asp-route-id="@Model.Id"
+               class="btn btn-outline-info btn-sm m-1">
+                Details
+            </a>
+        </div>
+
+        <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+    </form>

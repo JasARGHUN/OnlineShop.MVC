@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ApplicationUser>
+@inject IAuthorizationService authorizationService
+
+@{
+    ViewBag.Title = "All Users";
+    Layout = "_AdminLayout";
+}
+
+<h3>All Users</h3>
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">User</th>
+                @if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+                {
+                    <th scope="col">Action</th>
+                }
+            </tr>
+        </thead>
+        @foreach (var obj in Model)
+        {
+            <tbody>
+                <tr>
+                    <th scope="row">@obj.Id</th>
+                    <td>@obj.UserName</td>
+                    @if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+                    {
+                        <td>
+                            <form asp-controller="Role" asp-action="DeleteUser" asp-route-id="@obj.Id" method="post">
+                                <a asp-controller="Role" asp-action="EditUser" asp-route-id="@obj.Id" class="btn btn-sm btn-warning">Edit</a>
+
+                                <span id="confirmDeleteSpan_@obj.Id" style="display:none">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Yes
+                                    </button>
+                                    <a href="#" class="btn btn-sm btn-primary" onclick="confirmDelete('@obj.Id', false)">No</a>
+                                </span>
+                                <span id="deleteSpan_@obj.Id">
+                                    @if ((await authorizationService.AuthorizeAsync(User, "DeleteRolePolicy")).Succeeded)
+                                    {
+                                        <a href="#" class="btn btn-sm btn-danger" onclick="confirmDelete('@obj.Id', true)">Delete</a>
+                                    }
+                                </span>
+
+                            </form>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        }
+    </table>
+}
+else
+{
+
+}
+<hr />
+<a asp-controller="Admin" asp-action="Index" class="btn btn-warning">Back</a>

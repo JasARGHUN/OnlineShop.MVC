@@ -1,0 +1,71 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<Employee>
+@{
+    ViewData["Title"] = "Employee List";
+    Layout = "_AdminLayout";
+}
+
+@if (Model.Count() == 0)
+{
+    <div class="text-center m-2">
+        <form asp-action="SeedDatabase" method="post">
+            <button type="submit" class="btn btn-danger">Fill the database with fake data.</button>
+        </form>
+    </div>
+}
+else
+{
+<div class="card m-2 p-2">
+    <form method="get" class="form-inline m-2">
+        <input name="filter" class="form-control" placeholder="Object..." value="@Model.RouteValue["Filter"]" />
+        <button type="submit" class="btn btn-success ml-1">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            Search
+        </button>
+    </form>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Profile</th>
+                <th scope="col">Hourly payment</th>
+                <th scope="col" class="text-right">Action</th>
+            </tr>
+        </thead>
+        @foreach (var emp in Model)
+        {
+
+            <tbody>
+                <tr>
+                    <th scope="row">@emp.Id</th>
+                    <td>@emp.Name</td>
+                    <td>@emp.Department</td>
+                    <td>@emp.Price</td>
+                    <td class="text-right">
+                        <form asp-action="Delete" asp-route-id="@emp.Id" method="post">
+                            <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@emp.Id">Edit</a>
+                            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('do you really want to delete: @emp.Name')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        }
+    </table>
+    <div class="m-2">
+        @*Pagination*@
+        <nav style="float:left" aria-label="Order Paging">
+            <h5>@await this.Component.InvokeAsync("Pager", new { pagingList = this.Model })</h5>
+            <hr />
+        </nav>
+    </div>
+    <hr />
+    <a asp-action="Create" asp-controller="Admin" class="btn btn-outline-primary mb-2">Add Object</a>
+    <a asp-action="ListRoles" asp-controller="Role" class="btn btn-outline-primary mb-2">Role List</a>
+    <a asp-action="ListUsers" asp-controller="Role" class="btn btn-outline-primary mb-2">View all Users</a>
+    <a asp-controller="Order" asp-action="Index" class="btn btn-outline-primary mb-2" target="_blank">Order panel</a>
+    <a asp-controller="Order" asp-action="ViewDataBase" class="btn btn-outline-primary mb-2" target="_blank">Data base: Orders</a>
+</div>
+}

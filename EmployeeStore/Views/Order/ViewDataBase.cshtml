@@ -1,0 +1,99 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<Order>
+
+@{
+    ViewBag.Title = "Data base: Orders";
+    Layout = "_AdminLayout";
+}
+
+@if (Model.Count() > 0)
+{
+    <form method="get" class="form-inline m-2">
+        <input name="filter" class="form-control" placeholder="Введите имя заказчика..." value="@Model.RouteValue["Filter"]" />
+        <button type="submit" class="btn btn-success ml-1">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            Search
+        </button>
+    </form>
+    <hr />
+    <table class="table table-bordered p-2">
+        <thead class="table-bordered">
+            <tr class="text-center">
+                <th><h5>@Html.SortableHeaderFor(model => model.OrderTime)</h5></th>
+                <th><h5>Client:</h5></th>
+                <th><h5>Post index:</h5></th>
+                <th><h5>Address:</h5></th>
+                <th><h5>Phone number:</h5></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Order o in Model)
+            {
+                <tr>
+                    <td colspan="6" class="bg-white">
+                    </td>
+                </tr>
+
+                <tr class="text-center">
+                    <td colspan="6" class="bg-light">
+                        <h3>Order ID: @o.OrderID</h3>
+                    </td>
+                </tr>
+                <tr class="text-center table-bordered">
+                    <th><h5>@o.OrderTime</h5></th>
+                    <th><h5>@o.Name</h5></th>
+                    <th><h5>@o.Zip</h5></th>
+                    <th><h5>@o.Line1</h5></th>
+                    <th><h5>@o.Phone</h5></th>
+                </tr>
+                <tr class="text-center">
+                    <td colspan="6"><h4>Детали:</h4></td>
+                </tr>
+
+                <tr class="table-bordered">
+                    <td><h5>Object name:</h5></td>
+                    <td><h5>Object category:</h5></td>
+                    <td class="text-right"><h5>Amount:</h5></td>
+                    <td class="text-right"><h5>Unit price:</h5></td>
+                    <td class="text-right"><h5>Total:</h5></td>
+                </tr>
+                @foreach (CartLine i in o.Lines)
+                {
+                    <tr class="table-bordered">
+                        <td>@i.Product.Name</td>
+                        <td>@i.Product.Department</td>
+                        <td class="text-right">@i.Quantity</td>
+                        <td class="text-right">@i.Product.Price</td>
+                        <td class="text-right">@i.TotalSum</td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="6" class="bg-transparent">
+                        <h4>
+                            Shipped order: @if (@o.Shipped == true)
+                            {<button class="btn border-success">Performe</button> }
+                            else
+                            { <button class="btn border-danger">Not performed</button>}
+                        </h4>
+                        <h4>Total sum: @o.TotalAmount</h4>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="m-2">
+        @*Pagination*@
+        <nav style="float:left" aria-label="Order Paging">
+            <h5>@await this.Component.InvokeAsync("Pager", new { pagingList = this.Model })</h5>
+            <hr />
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-sm btn-primary  text-right">Back to admin panel</a>
+        </nav>
+    </div>
+}
+else
+{
+    <div class="text-center"><h4 class="text-danger">No data</h4></div>
+    <div class="text-center m-2">
+        <a asp-controller="Order" asp-action="ViewDataBase" class="btn btn-primary">Back to order panel</a>
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-warning">Back to admin panel</a>
+    </div>
+}
